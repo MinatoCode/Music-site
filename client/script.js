@@ -1,5 +1,3 @@
-// Basic YouTube Music Streaming App logic with all requested features
-
 let currentTrack = null;
 let isPlaying = false;
 let currentVolume = 50;
@@ -39,7 +37,6 @@ const videoModalTitle = document.getElementById('videoModalTitle');
 const playerContainer = document.getElementById('youtube-player-container');
 const closeVideoModal = document.getElementById('closeVideoModal');
 
-// Utility: Extract videoId from URL
 function extractYouTubeVideoId(url) {
     if (!url) return null;
     const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?.+&v=)([^#&?]{11}).*/;
@@ -47,7 +44,6 @@ function extractYouTubeVideoId(url) {
     return (match && match[1]) ? match[1] : null;
 }
 
-// Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     setInitialVolume();
@@ -74,7 +70,6 @@ function initializeEventListeners() {
     if (backwardBtn) backwardBtn.addEventListener('click', () => seekAudio(-10));
     if (forwardBtn) forwardBtn.addEventListener('click', () => seekAudio(10));
 
-    // Timeline seek by click & drag
     progressBar.addEventListener('click', function(e) {
         const rect = progressBar.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -99,21 +94,23 @@ function initializeEventListeners() {
     audioElement.addEventListener('ended', () => {
         downloadMp3Btn.style.display = '';
         downloadMp4Btn.style.display = '';
+        document.body.classList.remove('blur-bg');
     });
 
-    // Hide player when clicking outside
-    document.addEventListener('mousedown', function(e) {
-        if (!audioPlayer.classList.contains('hidden') && !audioPlayer.contains(e.target)) {
-            stopStreaming();
+    document.addEventListener('click', function(e) {
+        if (!audioPlayer.classList.contains('hidden')) {
+            if (!audioPlayer.contains(e.target)) {
+                stopStreaming();
+            }
         }
     });
 
-    // Video Modal close logic
     closeVideoModal.addEventListener('click', function() {
         videoModal.classList.add('hidden');
         playerContainer.innerHTML = '';
         downloadMp3Btn.style.display = '';
         downloadMp4Btn.style.display = '';
+        document.body.classList.remove('blur-bg');
     });
     videoModal.addEventListener('mousedown', function(e) {
         if (e.target === this) {
@@ -121,6 +118,7 @@ function initializeEventListeners() {
             playerContainer.innerHTML = '';
             downloadMp3Btn.style.display = '';
             downloadMp4Btn.style.display = '';
+            document.body.classList.remove('blur-bg');
         }
     });
 }
@@ -219,6 +217,7 @@ function playTrack(trackId) {
     downloadMp3Btn.style.display = 'none';
     downloadMp4Btn.style.display = 'none';
     playAudioStream(`https://www.youtube.com/watch?v=${track.videoId}`);
+    document.body.classList.add('blur-bg');
 }
 
 function stopStreaming() {
@@ -227,6 +226,7 @@ function stopStreaming() {
     audioElement.currentTime = 0;
     downloadMp3Btn.style.display = '';
     downloadMp4Btn.style.display = '';
+    document.body.classList.remove('blur-bg');
 }
 
 async function playAudioStream(url) {
@@ -268,6 +268,7 @@ function playMp4Stream(url) {
     downloadMp4Btn.style.display = 'none';
     showYouTubeModal(videoId, currentTrack?.title || "YouTube Video");
     hideLoading();
+    document.body.classList.add('blur-bg');
 }
 
 function showYouTubeModal(videoId, title) {
@@ -414,4 +415,4 @@ function showToast(message, type = 'default') {
     setTimeout(() => {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
     }, 5000);
-        }
+                                           }
