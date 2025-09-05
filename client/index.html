@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YT Music Streaming App</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.5 16.5L7 14l2.5-2.5L12 14l7-7 1.5 1.5L12 17 9.5 16.5z'/></svg>">
+    <title>Music streamer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2[...]">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,6 +40,13 @@
                 </div>
             </div>
         </header>
+
+        <!-- Direct YouTube URL Input -->
+        <div class="direct-input-section glass-morphism">
+            <input type="text" id="ytUrlInput" placeholder="Paste YouTube URL for direct streaming..." style="width:60%;padding:0.75rem 1rem;border-radius:25px;border:1px solid #667eea;margin-right:10px">
+            <button id="directAudioBtn" class="action-btn" style="margin-right:5px">Play Audio</button>
+            <button id="directVideoBtn" class="action-btn video-btn">Play Video</button>
+        </div>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -90,7 +97,6 @@
                         <p id="playerArtist" class="track-artist" data-testid="text-player-artist">Artist Name</p>
                     </div>
                 </div>
-                
                 <div class="player-controls">
                     <button id="playPauseBtn" class="control-btn play-pause" data-testid="button-play-pause">
                         <i class="fas fa-play"></i>
@@ -108,7 +114,6 @@
                         <span>MP4</span>
                     </button>
                 </div>
-
                 <div class="volume-control">
                     <button id="volumeBtn" class="control-btn" data-testid="button-volume">
                         <i class="fas fa-volume-up"></i>
@@ -116,7 +121,6 @@
                     <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50" data-testid="input-volume">
                 </div>
             </div>
-
             <div class="progress-container">
                 <span id="currentTime" class="time" data-testid="text-current-time">0:00</span>
                 <div class="progress-bar">
@@ -124,8 +128,6 @@
                 </div>
                 <span id="totalTime" class="time" data-testid="text-total-time">0:00</span>
             </div>
-
-            <!-- Hidden audio and video elements -->
             <audio id="audioElement" preload="none"></audio>
             <video id="videoElement" preload="none" style="display: none;" controls></video>
         </div>
@@ -157,7 +159,6 @@
         <!-- Toast Messages -->
         <div id="toastContainer" class="toast-container"></div>
     </div>
-
     <script src="script.js"></script>
 </body>
-</html>
+                </html>
