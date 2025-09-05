@@ -3,7 +3,6 @@ let isPlaying = false;
 let currentVolume = 50;
 let seeking = false;
 
-// DOM element selectors
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const resultsContainer = document.getElementById('resultsContainer');
@@ -12,6 +11,7 @@ const featuredSection = document.getElementById('featuredSection');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const blurOverlay = document.getElementById('blurOverlay');
 const audioPlayer = document.getElementById('audioPlayer');
+const closeAudioPlayer = document.getElementById('closeAudioPlayer');
 const miniAudioPlayer = document.getElementById('miniAudioPlayer');
 const miniTrackTitle = document.getElementById('miniTrackTitle');
 const miniBackwardBtn = document.getElementById('miniBackwardBtn');
@@ -105,8 +105,9 @@ function initializeEventListeners() {
         stopStreaming();
     });
 
-    // ❌ Removed closeAudioPlayer listener
-    // Player cannot be closed with a cross anymore
+    closeAudioPlayer.addEventListener('click', function() {
+        stopStreaming();
+    });
 
     videoModal.addEventListener('mousedown', function(e) {
         if (e.target === this) {
@@ -120,7 +121,7 @@ function initializeEventListeners() {
         playerContainer.innerHTML = '';
     });
 
-    // Minimize player if clicking outside
+    // Minimize player if clicking outside player
     document.addEventListener('mousedown', function(e) {
         if (!audioPlayer.classList.contains('hidden')) {
             let node = e.target;
@@ -136,7 +137,7 @@ function initializeEventListeners() {
     });
 
     // Restore full player on mini player click
-    miniAudioPlayer.addEventListener('click', function() {
+    miniAudioPlayer.addEventListener('click', function(e) {
         restorePlayer();
     });
 }
@@ -218,7 +219,7 @@ function createTrackCard(track) {
     return card;
 }
 
-   function playTrack(trackId) {
+function playTrack(trackId) {
     const trackCard = document.querySelector(`[data-testid="card-track-${trackId}"]`);
     if (!trackCard || !trackCard.trackData) return;
     const track = trackCard.trackData;
@@ -432,4 +433,4 @@ function showLoading(message) {
 function hideLoading() {
     loadingSpinner.classList.add('hidden');
     blurOverlay.classList.remove('active');
-}
+  }
