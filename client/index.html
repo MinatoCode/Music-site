@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YT Music Streaming App</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2[...]">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,13 +39,6 @@
                 </div>
             </div>
         </header>
-
-        <!-- Direct YouTube URL Input -->
-        <div class="direct-input-section glass-morphism">
-            <input type="text" id="ytUrlInput" placeholder="Paste YouTube URL for direct streaming..." style="width:60%;padding:0.75rem 1rem;border-radius:25px;border:1px solid #667eea;margin-right:10px">
-            <button id="directAudioBtn" class="action-btn" style="margin-right:5px">Play Audio</button>
-            <button id="directVideoBtn" class="action-btn video-btn">Play Video</button>
-        </div>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -134,6 +126,21 @@
             <video id="videoElement" preload="none" style="display: none;" controls class="hidden"></video>
         </div>
 
+        <!-- Video Modal -->
+        <div id="videoModal" class="video-modal hidden">
+            <div class="video-modal-content">
+                <div class="video-modal-header">
+                    <h3 id="videoModalTitle" data-testid="text-video-modal-title">Video Player</h3>
+                    <button id="closeVideoModal" class="close-btn" data-testid="button-close-video">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="video-container">
+                    <div id="youtube-player-container"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- Loading Spinner -->
         <div id="loadingSpinner" class="loading-spinner hidden">
             <div class="spinner"></div>
@@ -145,4 +152,4 @@
     </div>
     <script src="script.js"></script>
 </body>
-                </html>
+    </html>
