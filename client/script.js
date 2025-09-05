@@ -12,7 +12,6 @@ const loadingSpinner = document.getElementById('loadingSpinner');
 const blurOverlay = document.getElementById('blurOverlay');
 const audioPlayer = document.getElementById('audioPlayer');
 const audioElement = document.getElementById('audioElement');
-const toastContainer = document.getElementById('toastContainer');
 const playerThumbnail = document.getElementById('playerThumbnail');
 const playerTitle = document.getElementById('playerTitle');
 const playerArtist = document.getElementById('playerArtist');
@@ -92,9 +91,16 @@ function initializeEventListeners() {
         downloadMp4Btn.style.display = '';
     });
 
-    document.addEventListener('click', function(e) {
+    // Improved: Hide player when clicking outside (use click instead of mousedown, and check event target more robustly)
+    document.addEventListener('mousedown', function(e) {
         if (!audioPlayer.classList.contains('hidden')) {
-            if (!audioPlayer.contains(e.target)) {
+            let node = e.target;
+            let inside = false;
+            while (node) {
+                if (node === audioPlayer) { inside = true; break; }
+                node = node.parentElement;
+            }
+            if (!inside) {
                 stopStreaming();
             }
         }
@@ -123,10 +129,7 @@ function setInitialVolume() {
 
 async function performSearch() {
     const query = searchInput.value.trim();
-    if (!query) {
-        showToast('Please enter a search term', 'error');
-        return;
-    }
+    if (!query) return;
     showLoading('Searching for music...');
     featuredSection.classList.add('hidden');
     searchResults.classList.add('hidden');
@@ -137,14 +140,9 @@ async function performSearch() {
         if (!response.ok) throw new Error(data.error || 'Search failed');
         if (data.tracks && data.tracks.length > 0) {
             displaySearchResults(data.tracks);
-            showToast(`Found ${data.tracks.length} tracks`, 'success');
-        } else {
-            showToast('No tracks found. Try a different search term.', 'error');
         }
     } catch (error) {
         hideLoading();
-        console.error('Search error:', error);
-        showToast('Failed to search. Please try again.', 'error');
     }
 }
 
@@ -197,10 +195,7 @@ function createTrackCard(track) {
 
 function playTrack(trackId) {
     const trackCard = document.querySelector(`[data-testid="card-track-${trackId}"]`);
-    if (!trackCard || !trackCard.trackData) {
-        showToast('Track not found', 'error');
-        return;
-    }
+    if (!trackCard || !trackCard.trackData) return;
     const track = trackCard.trackData;
     currentTrack = track;
     playerThumbnail.src = track.thumbnail || '/placeholder-music.jpg';
@@ -221,10 +216,7 @@ function stopStreaming() {
 
 async function playAudioStream(url) {
     const videoId = extractYouTubeVideoId(url);
-    if (!videoId) {
-        showToast('Invalid YouTube URL', 'error');
-        return;
-    }
+    if (!videoId) return;
     showLoading('Loading audio...');
     try {
         audioElement.src = `/api/proxy-download/${videoId}?format=mp3`;
@@ -235,24 +227,18 @@ async function playAudioStream(url) {
             updatePlayButton();
             audioElement.play();
             hideLoading();
-            showToast('Now streaming audio', 'success');
         };
         audioElement.onerror = () => {
             hideLoading();
-            showToast('Audio stream error. Try video instead.', 'error');
         };
     } catch (error) {
         hideLoading();
-        showToast('Audio stream error', 'error');
     }
 }
 
 function playMp4Stream(url) {
     const videoId = extractYouTubeVideoId(url || currentTrack?.url || currentTrack?.videoId);
-    if (!videoId) {
-        showToast('Invalid YouTube URL', 'error');
-        return;
-    }
+    if (!videoId) return;
     showLoading('Loading video...');
     downloadMp3Btn.style.display = 'none';
     downloadMp4Btn.style.display = 'none';
@@ -298,10 +284,8 @@ function togglePlayPause() {
     isPlaying = !isPlaying;
     updatePlayButton();
     if (isPlaying) {
-        showToast('Resumed', 'success');
         audioElement.play();
     } else {
-        showToast('Paused', 'success');
         audioElement.pause();
     }
 }
@@ -328,10 +312,7 @@ async function downloadTrack(format, trackId = null) {
     const track = trackId ?
         document.querySelector(`[data-testid="card-track-${trackId}"]`)?.trackData :
         currentTrack;
-    if (!track) {
-        showToast('No track selected', 'error');
-        return;
-    }
+    if (!track) return;
     showLoading(`Preparing ${format.toUpperCase()} download...`);
     try {
         const downloadUrl = `/api/proxy-download/${track.videoId}?format=${format}`;
@@ -342,10 +323,8 @@ async function downloadTrack(format, trackId = null) {
         link.click();
         document.body.removeChild(link);
         hideLoading();
-        showToast(`${format.toUpperCase()} download started!`, 'success');
     } catch (error) {
         hideLoading();
-        showToast(`Failed to download ${format.toUpperCase()}. Please try again.`, 'error');
     }
 }
 
@@ -395,15 +374,4 @@ function showLoading(message) {
 function hideLoading() {
     loadingSpinner.classList.add('hidden');
     blurOverlay.classList.remove('active');
-}
-
-function showToast(message, type = 'default') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    toast.setAttribute('data-testid', `toast-${type}`);
-    toastContainer.appendChild(toast);
-    setTimeout(() => {
-        if (toast.parentNode) toast.parentNode.removeChild(toast);
-    }, 5000);
-                                            }
+                                             }
