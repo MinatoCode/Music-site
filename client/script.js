@@ -3,7 +3,6 @@ let isPlaying = false;
 let currentVolume = 50;
 let seeking = false;
 
-// ...your DOM element selectors as before...
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const resultsContainer = document.getElementById('resultsContainer');
@@ -34,12 +33,20 @@ const videoModal = document.getElementById('videoModal');
 const videoModalTitle = document.getElementById('videoModalTitle');
 const playerContainer = document.getElementById('youtube-player-container');
 const closeVideoModal = document.getElementById('closeVideoModal');
-    
+
+// Always hide download buttons in player/miniplayer
 function hidePlayerDownloadButtons() {
     const downloadMp3Btn = document.getElementById('downloadMp3Btn');
     const downloadMp4Btn = document.getElementById('downloadMp4Btn');
     if (downloadMp3Btn) downloadMp3Btn.style.display = 'none';
     if (downloadMp4Btn) downloadMp4Btn.style.display = 'none';
+}
+
+function extractYouTubeVideoId(url) {
+    if (!url) return null;
+    const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?.+&v=)([^#&?]{11}).*/;
+    const match = url.match(regExp);
+    return (match && match[1]) ? match[1] : null;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -98,6 +105,10 @@ function initializeEventListeners() {
         stopStreaming();
     });
 
+    closeAudioPlayer.addEventListener('click', function() {
+        stopStreaming();
+    });
+
     videoModal.addEventListener('mousedown', function(e) {
         if (e.target === this) {
             this.classList.add('hidden');
@@ -129,7 +140,7 @@ function initializeEventListeners() {
     miniAudioPlayer.addEventListener('click', function(e) {
         restorePlayer();
     });
-                                  }
+}
 
 function setInitialVolume() {
     audioElement.volume = currentVolume / 100;
@@ -137,7 +148,7 @@ function setInitialVolume() {
 }
 
 async function performSearch() {
-const query = searchInput.value.trim();
+    const query = searchInput.value.trim();
     if (!query) {
         featuredSection.classList.remove('hidden');
         searchResults.classList.add('hidden');
@@ -209,6 +220,7 @@ function createTrackCard(track) {
 }
 
 function playTrack(trackId) {
+    const trackCard = document.querySelector(`[data-testid="card-track-${trackId}"]`);
     if (!trackCard || !trackCard.trackData) return;
     const track = trackCard.trackData;
     currentTrack = track;
@@ -218,6 +230,7 @@ function playTrack(trackId) {
     playAudioStream(`https://www.youtube.com/watch?v=${track.videoId}`);
     hidePlayerDownloadButtons();
 }
+
 function stopStreaming() {
     // Exit player: Hide main player, hide mini, stop audio, reset state
     audioPlayer.classList.add('hidden');
@@ -420,4 +433,4 @@ function showLoading(message) {
 function hideLoading() {
     loadingSpinner.classList.add('hidden');
     blurOverlay.classList.remove('active');
-}
+  }
