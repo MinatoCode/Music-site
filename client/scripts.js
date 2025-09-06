@@ -4,7 +4,37 @@ let currentVolume = 50;
 let seeking = false;
 
 // ...your DOM element selectors as before...
-
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const resultsContainer = document.getElementById('resultsContainer');
+const searchResults = document.getElementById('searchResults');
+const featuredSection = document.getElementById('featuredSection');
+const loadingSpinner = document.getElementById('loadingSpinner');
+const blurOverlay = document.getElementById('blurOverlay');
+const audioPlayer = document.getElementById('audioPlayer');
+const closeAudioPlayer = document.getElementById('closeAudioPlayer');
+const miniAudioPlayer = document.getElementById('miniAudioPlayer');
+const miniTrackTitle = document.getElementById('miniTrackTitle');
+const miniBackwardBtn = document.getElementById('miniBackwardBtn');
+const miniPlayPauseBtn = document.getElementById('miniPlayPauseBtn');
+const miniForwardBtn = document.getElementById('miniForwardBtn');
+const audioElement = document.getElementById('audioElement');
+const playerThumbnail = document.getElementById('playerThumbnail');
+const playerTitle = document.getElementById('playerTitle');
+const playerArtist = document.getElementById('playerArtist');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const playVideoBtn = document.getElementById('playVideoBtn');
+const volumeBtn = document.getElementById('volumeBtn');
+const volumeSlider = document.getElementById('volumeSlider');
+const progressBar = document.querySelector('.progress-bar');
+const progressFill = document.getElementById('progressFill');
+const backwardBtn = document.getElementById('backwardBtn');
+const forwardBtn = document.getElementById('forwardBtn');
+const videoModal = document.getElementById('videoModal');
+const videoModalTitle = document.getElementById('videoModalTitle');
+const playerContainer = document.getElementById('youtube-player-container');
+const closeVideoModal = document.getElementById('closeVideoModal');
+    
 function hidePlayerDownloadButtons() {
     const downloadMp3Btn = document.getElementById('downloadMp3Btn');
     const downloadMp4Btn = document.getElementById('downloadMp4Btn');
