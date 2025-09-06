@@ -1,12 +1,140 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    background: #191919;
-    color: #ffffff;
-    line-height: 1.6;
-    overflow-x: hidden;
-    transition: filter 0.4s;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #191919;
+  color: #ffffff;
+  line-height: 1.6;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
+
+/* Gradient Blinds Animation for Front Page */
+.gradient-blinds-bg {
+  position: relative;
+  width: 100vw;
+  min-height: 180px;
+  height: 220px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.gradient-blinds-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    120deg,
+    #2196f3 0px, #2196f3 12px,
+    #e91e63 12px, #e91e63 24px,
+    #00ffb8 24px, #00ffb8 36px,
+    #7c3aed 36px, #7c3aed 48px,
+    #191919 48px, #191919 100px
+  );
+  opacity: 0.14;
+  animation: blindsMove 8s linear infinite;
+  z-index: 0;
+}
+
+@keyframes blindsMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 400px 0; }
+}
+
+.gradient-blinds-container {
+  position: relative;
+  width: 100vw;
+  min-height: 180px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Animated Gradient Text */
+.animated-gradient-text {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  max-width: fit-content;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: box-shadow 0.5s ease-out;
+  overflow: hidden;
+  padding: 0.7em 1.5em;
+  font-size: 2rem;
+  pointer-events: auto;
+  background: rgba(25,25,25,0.4);
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 300% 100%;
+  animation: gradientMove 7s linear infinite;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #2196f3, #e91e63, #00ffb8, #7c3aed, #2196f3, #e91e63, #00ffb8, #7c3aed);
+  opacity: 0.65;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  padding-left: 0.3em;
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientMove 7s linear infinite, fadeUp 1s cubic-bezier(.7,.3,.3,1) 0.3s both;
+  font-weight: 700;
+  font-size: 2rem;
+  background: linear-gradient(90deg, #2196f3, #e91e63, #00ffb8, #7c3aed, #2196f3, #e91e63, #00ffb8, #7c3aed);
+  text-shadow: 0 2px 16px rgba(44,0,100,0.09);
+  letter-spacing: 0.03em;
+  filter: brightness(1.12);
+}
+
+.copyright {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  z-index: 2;
+  position: relative;
+  background: none !important;
+  background-clip: border-box !important;
+  animation: none !important;
+  margin-right: 0.15em;
+  filter: drop-shadow(0 0 10px #191919);
+}
+
+/* Extra fade up */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+
 .blur-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
