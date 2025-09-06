@@ -49,10 +49,87 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeEventListeners() {
-    // ...search, play, volume, progress, minimize, restore etc...
-    // REMOVE: closeAudioPlayer event listener
-    // Do NOT add any cross/close button logic
-}
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') performSearch();
+    });
+    searchBtn.addEventListener('click', performSearch);
+
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    playVideoBtn.addEventListener('click', function() {
+        playMp4Stream(currentTrack?.url);
+    });
+
+    volumeSlider.addEventListener('input', adjustVolume);
+
+    backwardBtn.addEventListener('click', () => seekAudio(-10));
+    forwardBtn.addEventListener('click', () => seekAudio(10));
+    miniBackwardBtn.addEventListener('click', () => seekAudio(-10));
+    miniForwardBtn.addEventListener('click', () => seekAudio(10));
+    miniPlayPauseBtn.addEventListener('click', function(e) {
+        togglePlayPause();
+        updateMiniPlayPauseBtn();
+        e.stopPropagation();
+    });
+
+    progressBar.addEventListener('click', function(e) {
+        const rect = progressBar.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = x / rect.width;
+        if (audioElement.src && audioElement.duration) {
+            audioElement.currentTime = percent * audioElement.duration;
+        }
+    });
+    progressBar.addEventListener('mousedown', () => seeking = true);
+    document.addEventListener('mouseup', () => seeking = false);
+    progressBar.addEventListener('mousemove', function(e) {
+        if (seeking && audioElement.src && audioElement.duration) {
+            const rect = progressBar.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percent = Math.max(0, Math.min(x / rect.width, 1));
+            audioElement.currentTime = percent * audioElement.duration;
+        }
+    });
+
+    audioElement.addEventListener('timeupdate', updateProgress);
+    audioElement.addEventListener('loadedmetadata', updateProgress);
+
+    audioElement.addEventListener('ended', () => {
+        hideMiniPlayer();
+        stopStreaming();
+    });
+
+    videoModal.addEventListener('mousedown', function(e) {
+        if (e.target === this) {
+            this.classList.add('hidden');
+            playerContainer.innerHTML = '';
+        }
+    });
+
+    closeVideoModal.addEventListener('click', function() {
+        videoModal.classList.add('hidden');
+        playerContainer.innerHTML = '';
+    });
+
+    // Minimize player if clicking outside player
+    document.addEventListener('mousedown', function(e) {
+        if (!audioPlayer.classList.contains('hidden')) {
+            let node = e.target;
+            let inside = false;
+            while (node) {
+                if (node === audioPlayer) { inside = true; break; }
+                node = node.parentElement;
+            }
+            if (!inside) {
+                minimizePlayer();
+            }
+        }
+    });
+
+    // Restore full player on mini player click
+    miniAudioPlayer.addEventListener('click', function(e) {
+        restorePlayer();
+    });
+                                  }
 
 function setInitialVolume() {
     audioElement.volume = currentVolume / 100;
